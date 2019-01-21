@@ -1,6 +1,10 @@
 # lookup
 C++ Lookup Table &amp; Map (JSON Serialization)
 
+**DEPENDENCIES**: https://github.com/nlohmann/json
+
+(CMakeLists.txt currently configured to use JSON_INCLUDE_DIR environment variable as the path to the 'single_include' directory)
+
 **C++ VERSION**: C++14 or newer
 
 The data directory contains sample 2-/3-/4-D data sets in CSV format (last column representing the table value). The 'convert' directory contains a simple CSV parser plus conversion code to generate JSON representations of each table (and combined map). 
