@@ -6,29 +6,6 @@
 
 namespace lookup {
 
-   namespace detail {
-      template<class T>
-      auto linear(const T& y0, const T& y2, const T& slope) {
-         return (y0 + (slope * (y2 - y0)));
-      }
-
-      template<class Grid, class It>
-      enable_if_1d_t<Grid, root_t<Grid>>
-         interpolate(const Grid& grid, It it) {
-         return linear(grid[it->lower],
-                       grid[it->upper],
-                       it->slope);
-      }
-
-      template<class Grid, class It>
-      enable_if_nd_t<Grid, root_t<Grid>>
-         interpolate(const Grid& grid, It it) {
-         return linear(interpolate(grid[it->lower], it + 1),
-                       interpolate(grid[it->upper], it + 1),
-                       it->slope);
-      }
-   }
-
    enum class ExtrapolationMode : int {
       Constant,
       Linear
@@ -92,6 +69,29 @@ namespace lookup {
 
    template<size_t N>
    using axes_policies_t = array<ExtrapolationPolicy, N>;
+
+   namespace detail {
+      template<class T>
+      auto linear(const T& y0, const T& y2, const T& slope) {
+         return (y0 + (slope * (y2 - y0)));
+      }
+
+      template<class Grid, class It>
+      enable_if_1d_t<Grid, root_t<Grid>>
+         interpolate(const Grid& grid, It it) {
+         return linear(grid[it->lower],
+                       grid[it->upper],
+                       it->slope);
+      }
+
+      template<class Grid, class It>
+      enable_if_nd_t<Grid, root_t<Grid>>
+         interpolate(const Grid& grid, It it) {
+         return linear(interpolate(grid[it->lower], it + 1),
+                       interpolate(grid[it->upper], it + 1),
+                       it->slope);
+      }
+   }
 
    template<class T, size_t N>
    auto interpolate(const grid_t<T, N>& grid,

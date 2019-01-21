@@ -75,33 +75,17 @@ namespace lookup {
       json.at(AXES).get_to(table.axes);
       resize(table.data, sizes(table.axes));
       detail::fill(json[DATA], table.data);
-      //for (auto i = 0U; i < N; ++i) {
-      //   auto& policy = table.policies[i];
-      //   policy = from_json(json[POLICIES][i], policy);
-
-      //   using value_t = std::decay_t<root_t<Table>>;
-      //   using axis_t = axis_t<value_t>;
-      //   table.axes[i] = json[AXES][i].get<axis_t>();
-      //}
-      //resize(table.data, sizes(table.axes));
-      //detail::fill(json[DATA], table.data);
    }
 
    template<class Table>
    enable_if_table_t<Table>
       to_json(json_t& json, const Table& table) {
-      constexpr size_t N = dimension_v<Table>;
       using namespace keys::table;
       json = json_t{
          { POLICIES, table.policies },
          { AXES, table.axes },
          { DATA, table.data },
       };
-      //for (auto i = 0U; i < N; ++i) {
-      //   json[POLICIES][i] = table.policies[i];
-      //   json[AXES][i] = table.axes[i];
-      //}
-      //json[DATA] = table.data;
    }
 
    template<class Map>

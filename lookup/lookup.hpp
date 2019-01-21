@@ -64,12 +64,34 @@ namespace lookup {
 
       bool contains(size_t N) const {
          return detail::contains(maps, N);
-      };
+      }
 
       bool contains(size_t N, const std::string& name) const {
          if (!contains(N)) return false;
          return detail::contains(maps.at(N), name);
-      };
+      }
+
+      template<size_t N, class Table = table<N>>
+      const Table& get_table(const std::string& name) const {
+#ifdef _DEBUG
+         if (!contains(N)) {
+            std::string msg = "No ";
+            msg += std::to_string(N);
+            msg += "-D tables found.";
+            throw std::runtime_error(msg);
+         }
+         if (!contains(N, name)) {
+            std::string msg = "No ";
+            msg += std::to_string(N);
+            msg += "-D tables found containing ";
+            msg += name;
+            msg += ".";
+            throw std::runtime_error(msg);
+         }
+#endif
+         const auto& base = maps.at(N).at(name);
+         return static_cast<const Table&>(*base);
+      }
 
    public:
       table_map() = default;
@@ -98,28 +120,6 @@ namespace lookup {
          constexpr size_t N = size_v<Values...>;
          const auto& table = get_table<N>(name);
          return table.lookup(std::forward<Values>(values)...);
-      }
-
-      template<size_t N, class Table = table<N>>
-      const Table& get_table(const std::string& name) const {
-#ifdef _DEBUG
-         if (!contains(N)) {
-            std::string msg = "No ";
-            msg += std::to_string(N);
-            msg += "-D tables found.";
-            throw std::runtime_error(msg);
-         }
-         if (!contains(N, name)) {
-            std::string msg = "No ";
-            msg += std::to_string(N);
-            msg += "-D tables found containing ";
-            msg += name;
-            msg += ".";
-            throw std::runtime_error(msg);
-         }
-#endif
-         const auto& base = maps.at(N).at(name);
-         return static_cast<const Table&>(*base);
       }
    };
 }
