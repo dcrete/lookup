@@ -12,7 +12,6 @@ namespace convert {
    struct Axes {
       using indices_t = lookup::int_pack<N>;
       using values_t = lookup::array<T, N>;
-      using axis_t = lookup::axis_t<T>;
       using axes_t = lookup::axes_t<T, N>;
 
       axes_t& axes{};
